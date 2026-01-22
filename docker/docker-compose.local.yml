@@ -1,0 +1,30 @@
+services:
+  app:
+    container_name: petstore-swagger-app
+    image: petstore-swagger-app
+    restart: unless-stopped
+    volumes:
+      - ./../app:/var/www/
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - petstore-swagger
+
+  nginx:
+    image: nginx:alpine
+    container_name: petstore-swagger-nginx
+    restart: unless-stopped
+    ports:
+      - '8000:80'
+    volumes:
+      - ./../app:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+    networks:
+      - petstore-swagger
+
+networks:
+  petstore-swagger:
+    external: true
